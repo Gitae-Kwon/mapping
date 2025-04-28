@@ -1,7 +1,8 @@
-streamlit
-pandas
-openpyxl>=3.1.2     # 3.1.2 이상은 Python 3.12 호환
-xlsxwriter
+streamlit>=1.34
+pandas>=2.2
+openpyxl>=3.1
+xlsxwriter>=3.2          # 엑셀 저장용
+numpy>=1.25              # pandas 의존
 ``` |
 | 3 | 로컬에서 **커밋 + 푸시** |  
 ```bash
