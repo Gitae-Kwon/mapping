@@ -49,7 +49,7 @@ def clean_title(text: str) -> str:
     t = re.sub(r"\d+", "", t).rstrip(".")
     t = re.sub(r"[\.~\-–—!@#$%^&*_=+\\|/:;\"'’`<>?，｡､{}$begin:math:display$$end:math:display$()]", "", t)
     t = re.sub(r"특별$", "", t)
-
+    t = t.replace("[", "").replace("]", "")
     return t.replace(" ", "").strip()
 
 # ── Streamlit UI ──────────────────────────────────────────────────────
