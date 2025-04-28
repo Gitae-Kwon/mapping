@@ -144,6 +144,6 @@ if st.button("🟢 매핑 실행"):
     st.download_button(
       label="📥 결과 엑셀 다운로드",
       data=buf.getvalue(),
-      file_name=save_name,  # 한 번만!
+      file_name=save_name,
       mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   )
