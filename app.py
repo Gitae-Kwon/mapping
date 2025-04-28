@@ -87,9 +87,9 @@ pairs = (
                         "최종_매핑결과": "콘텐츠ID"})
 )
 
-pad = len(df2) - len(pairs)
-df2["매핑콘텐츠명"] = list(pairs["매핑콘텐츠명"]) + [""] * pad
-df2["콘텐츠ID"]     = list(pairs["콘텐츠ID"])     + [""] * pad
+      pad = len(df2) - len(pairs)
+      df2["매핑콘텐츠명"] = list(pairs["매핑콘텐츠명"]) + [""] * pad
+      df2["콘텐츠ID"]     = list(pairs["콘텐츠ID"])     + [""] * pad
 
         # ❽ 최종 미매핑 & 정렬 --------------------------------------
         no1 = df2.loc[df2["정제_상품명"] == df2["매핑결과"], "정제_상품명"]
