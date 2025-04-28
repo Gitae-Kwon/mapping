@@ -1,0 +1,25 @@
+streamlit
+pandas
+openpyxl>=3.1.2     # 3.1.2 이상은 Python 3.12 호환
+xlsxwriter
+``` |
+| 3 | 로컬에서 **커밋 + 푸시** |  
+```bash
+git add requirements.txt
+git commit -m "fix: add openpyxl>=3.1.2"
+git push origin main
+``` |
+| 4 | Streamlit Cloud 대시보드 → 해당 앱 → **⋮ → “Redeploy”** 누르기 (새 빌드 트리거) |
+| 5 | 빌드 로그에 `Collecting openpyxl 3.1.2 … Successfully installed` 문구 확인 |
+| 6 | 앱 새로고침 → 파일 3개 업로드 → “🟢 매핑 실행” 테스트 |
+
+> **TIP** : requirements.txt 를 수정하면 Streamlit Cloud가 자동으로 새 환경을 만들어줍니다.  
+> 버전을 명시하지 않으면 기본적으로 Python 3.12을 지원하지 않는 3.0.* 가 잡혀 오류가 반복될 수 있으니 `>=3.1.2` 로 고정하는 편이 안전합니다.
+
+---
+
+### 💡 오류 로그 직접 확인하기
+1. 실행 중인 앱 오른쪽 하단 **“Manage app”** 클릭  
+2. **Logs 탭** → 빨간 글씨 전체를 보면 어떤 패키지가 없어서 실패했는지 바로 확인할 수 있습니다.
+
+이렇게 수정 후에도 문제가 지속되면 **로그 전문**을 복사해서 알려 주세요!
