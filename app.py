@@ -30,6 +30,7 @@ def clean_title(txt: str) -> str:
     t = re.sub(r"\d+","",t).rstrip('.')
     t = re.sub(r"[\.~\-–—!@#$%^&*_=+\\|/:;\"'’`<>?，｡､{}$begin:math:text$$end:math:text$$begin:math:display$$end:math:display$]","",t)
     t = re.sub(r"특별$", "", t)
+    t = re.sub(r"\[[^\]]*\]", "", t)
     return t.replace(" ","").strip()
 
 # ─── Streamlit UI ─────────────────────────────────────────────────────
@@ -143,6 +144,6 @@ if st.button("🟢 매핑 실행"):
     st.download_button(
         "📥 결과 엑셀 다운로드",
         buf.getvalue(),
-        file_name="mapping_result.xlsx",
+        file_name=file_name=save_name,
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
