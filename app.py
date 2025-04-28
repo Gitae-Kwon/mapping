@@ -88,7 +88,24 @@ if st.button("🟢 매핑 실행"):
 
     df2.loc[success_mask, "매핑콘텐츠명"] = df2.loc[success_mask, "정제_상품명"]
     df2.loc[success_mask, "콘텐츠ID"]   = df2.loc[success_mask, "최종_매핑결과"]
-  
+
+  # ── 7-B)  “매핑콘텐츠명 / 콘텐츠ID” 컬럼 만들기 ─────────────────────────
+# ① 두 컬럼을 미리 빈 값으로 만들어 둠
+df2["매핑콘텐츠명"] = ""
+df2["콘텐츠ID"]   = ""
+
+# ② ➊ ‘정제_상품명’ == ‘매핑결과’(→ 아직 매핑되지 않음) ➋ 값이 숫자가 아닌 경우만
+unmapped_mask = (
+    (df2["정제_상품명"] == df2["매핑결과"]) &
+    (~df2["매핑결과"].astype(str).str.isnumeric())
+)
+
+# ③ 첫 번째 등장 행에만 값을 채우고, 이후 중복은 비움
+first_only = ~df2.loc[unmapped_mask, "정제_상품명"].duplicated()
+
+df2.loc[unmapped_mask & first_only, "매핑콘텐츠명"] = df2.loc[unmapped_mask & first_only, "정제_상품명"]
+#   콘텐츠ID 는 아직 ID가 없으므로 공란(필요하면 다른 정보로 채우세요)
+
     # 8) file1 정보 붙이기
     info = df1[[c1, "정제_콘텐츠명", "판매채널콘텐츠ID"]].rename(columns={
         c1: "file1_콘텐츠명",
