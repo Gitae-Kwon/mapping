@@ -151,7 +151,8 @@ if st.button("🟢 매핑 실행"):
     cols[idx:idx] = ["동일_매핑콘텐츠명", "동일_콘텐츠ID"]
     ordered = front + [c for c in cols if c not in front]
     result  = result[ordered]
-
+    )
+  
     result.drop(
     columns=["동일_콘텐츠ID", "최종_정렬된_매핑되지않은_상품명", "최종_매핑되지않은_상품명"],
     errors="ignore",
