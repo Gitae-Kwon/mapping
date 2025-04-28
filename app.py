@@ -31,6 +31,7 @@ def clean_title(txt: str) -> str:
     t = re.sub(r"\d+", "", t).rstrip('.')
     t = re.sub(r"[\.~\-–—!@#$%^&*_=+\\|/:;\"'’`<>?，｡､{}()]", "", t)
     t = re.sub(r"특별$", "", t)
+    t = re.sub(r"[\[\]]", "", t) 
     return t.replace(" ", "").strip()
 
 # ─── Streamlit UI ─────────────────────────────────────────────────────
