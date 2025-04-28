@@ -82,12 +82,12 @@ if st.button("🟢 매핑 실행"):
     df2["최종_매핑되지않은_상품명"] = df2["정제_상품명"].where(
         df2["정제_상품명"].isin(final_unmatch), ""
     )
-    # ── ✅ 7-A)  매핑 불발(정제_상품명 = 매핑결과) 행 → 새 컬럼 두 개 복사
-    same_mask = df2["정제_상품명"] == df2["매핑결과"]
+    # ── ✅ 2-A)  ‘매핑 성공한 행’ → 매핑콘텐츠명 / 콘텐츠ID 컬럼 채우기
+    #   · 정제_상품명 ≠ 최종_매핑결과  → 매핑이 일어난 행
+    success_mask = df2["정제_상품명"] != df2["최종_매핑결과"]
 
-    # 조건을 만족하는 행에만 값 채우고, 나머지는 빈칸("")
-    df2.loc[same_mask, "매핑콘텐츠명"] = df2.loc[same_mask, "정제_상품명"]
-    df2.loc[same_mask, "콘텐츠ID"]   = df2.loc[same_mask, "매핑결과"]
+    df2.loc[success_mask, "매핑콘텐츠명"] = df2.loc[success_mask, "정제_상품명"]
+    df2.loc[success_mask, "콘텐츠ID"]   = df2.loc[success_mask, "최종_매핑결과"]
   
     # 8) file1 정보 붙이기
     info = df1[[c1, "정제_콘텐츠명", "판매채널콘텐츠ID"]].rename(columns={
