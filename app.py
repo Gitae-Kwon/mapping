@@ -1,6 +1,3 @@
-t = re.sub(r"\[[^\]]*\]", "", t)
-
-
 # app.py ───────────────────────────────────────────────────────────────
 import streamlit as st, pandas as pd, re, io
 import openpyxl, xlsxwriter
