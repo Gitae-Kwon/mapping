@@ -74,27 +74,14 @@ if st.button("🟢 매핑 실행"):
     map3 = df3.drop_duplicates("정제_콘텐츠3명").set_index("정제_콘텐츠3명")[id3]
     df2["최종_매핑결과"] = df2["정제_상품명"].map(map3).fillna(df2["매핑결과"])
 
-      # 7) 최종 미매핑 리스트 & 정렬
-    final_unmatch = (
-        no1[~no1.isin(map3.index)]
-        .drop_duplicates()
+    # 7) 최종 미매핑 & 정렬
+    final_unmatch = no1[~no1.isin(map3.index)].drop_duplicates()
+    df2["최종_정렬된_매핑되지않은_상품명"] = (
+        sorted(final_unmatch) + [""] * (len(df2) - len(final_unmatch))
     )
-
-    # ▼▼▼ 7-B) 매핑콘텐츠명 / 콘텐츠ID 컬럼 ▼▼▼
-    df2["매핑콘텐츠명"] = ""
-    df2["콘텐츠ID"]   = ""
-
-    unmapped_mask = (
-        (df2["정제_상품명"] == df2["매핑결과"]) &
-        (~df2["매핑결과"].astype(str).str.isnumeric())
+    df2["최종_매핑되지않은_상품명"] = df2["정제_상품명"].where(
+        df2["정제_상품명"].isin(final_unmatch), ""
     )
-
-    first_only = ~df2.loc[unmapped_mask, "정제_상품명"].duplicated()
-
-    df2.loc[unmapped_mask & first_only, "매핑콘텐츠명"] = \
-        df2.loc[unmapped_mask & first_only, "정제_상품명"]
-    # 필요하면 콘텐츠ID도 여기서 채우세요 (예: 다른 매핑 테이블 이용)
-    # ▲▲▲---------------------------------------------------▲▲▲
 
     # 8) file1 정보 붙이기
     info = df1[[c1, "정제_콘텐츠명", "판매채널콘텐츠ID"]].rename(columns={
