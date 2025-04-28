@@ -75,7 +75,7 @@ if st.button("🟢 매핑 실행"):
     df2["최종_매핑결과"] = df2["정제_상품명"].map(map3).fillna(df2["매핑결과"])
 
     # 7) ⬅️ 새 규칙 : 매핑콘텐츠명 / 콘텐츠ID 열 만들기
-    mask_pair = df2["정제_상품명"] != df2["매핑결과"]          # 다른 경우만
+    mask_pair = df2["정제_상품명"] == df2["매핑결과"]          # 다른 경우만
     pairs = (
         df2.loc[mask_pair, ["정제_상품명", "매핑결과"]]
            .drop_duplicates()
