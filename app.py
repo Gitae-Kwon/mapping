@@ -48,15 +48,11 @@ st.title("📁 판매채널 및 콘텐츠마스터ID 매핑")
 
 f1 = st.file_uploader(
     "① S2-판매채널 콘텐츠리스트 "
-    "(https://kiss.kld.kr/mst/sch/schn-ctns-search)에서 채널 검색 후 다운로드  \n"
+    "( https://kiss.kld.kr/mst/sch/schn-ctns-search )에서 채널 검색 후 다운로드  \n"
     "※ S2에서 다운로드한 파일은 먼저 ‘열기’ 후 ‘다른 이름으로 저장’하여 업로드해 주세요.",
     type="xlsx",
 )
 f2 = st.file_uploader("② 플랫폼별 정산서 (판매채널에서 제공한 정산서)", type="xlsx")
-
-st.caption(
-    f"전체 콘텐츠마스터는 IPS(4월28일기준)데이터를 사용합니다."
-)
 
 save_name = st.text_input("💾 저장 파일명(확장자 제외)", value="mapping_result") + ".xlsx"
 
