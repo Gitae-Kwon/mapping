@@ -197,12 +197,3 @@ if st.button("🟢 매핑 실행"):
 
     file_label = st.text_input("저장할 파일명 (.xlsx 제외)", value="mapping_result")
     save_name  = (file_label or "mapping_result").strip() + ".xlsx"
-
-    # 3-14) 다운로드 버튼
-    st.download_button(
-        "📥 엑셀 다운로드",
-        buf.getvalue(),
-        file_name=save_name,
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        key="download_btn",
-    )
