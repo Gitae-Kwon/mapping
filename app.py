@@ -158,17 +158,17 @@ if st.button("🟢 매핑 실행"):
     inplace=True,
     )
   
-    # 11) 결과 저장 & 다운로드
-    buf = io.BytesIO()
-    with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
-    # ─ ① 데이터 먼저 씁니다
+# 11) 엑셀 저장 & 다운로드 ----------------------------------------
+buf = io.BytesIO()
+with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
+    # ─ ① 데이터 먼저 기록
     result.to_excel(writer, sheet_name="매핑결과", index=False)
 
-    # ─ ② 워크북 · 워크시트 객체 얻기
-    wb  = writer.book
-    ws  = writer.sheets["매핑결과"]
+    # ─ ② 워크북·워크시트 객체
+    wb = writer.book
+    ws = writer.sheets["매핑결과"]
 
-    # ─ ③ 헤더용 서식 정의
+    # ─ ③ 헤더 서식 정의
     fmt_yellow = wb.add_format({"bg_color": "#FFFFCC", "bold": True, "border": 1})
     fmt_green  = wb.add_format({"bg_color": "#99FFCC", "bold": True, "border": 1})
 
@@ -181,12 +181,13 @@ if st.button("🟢 매핑 실행"):
             ws.write(0, col_idx, col_name, fmt_yellow)
         elif col_name in green_cols:
             ws.write(0, col_idx, col_name, fmt_green)
-        # 나머지는 기본 서식(이미 적혀 있으므로 그대로 둡니다)
+        # 나머지 헤더는 기본 서식 그대로 둡니다
 
-    st.success("✅ 매핑 완료! 아래 버튼으로 다운로드하세요.")
-    st.download_button(
-      "📥 결과 엑셀 다운로드",
-      buf.getvalue(),
-      file_name=save_name,            # 사용자가 지정한 파일명
-      mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+# ─ ⑤ 스트림릿 다운로드 버튼
+st.success("✅ 매핑 완료! 아래 버튼으로 다운로드하세요.")
+st.download_button(
+    "📥 결과 엑셀 다운로드",
+    buf.getvalue(),
+    file_name=save_name,   # 입력받은 파일명(또는 기본값)
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 )
