@@ -191,9 +191,11 @@ if st.button("🟢 매핑 실행"):
                 ws.write(0, col_idx, col_name, fmt_green)
 
     # 3-13) 사용자에게 파일명 입력받기 -------------------------------
-    st.success("✅ 매핑 완료!  저장할 파일명을 입력한 뒤 다운로드하세요.")
+    st.success("✅ 매핑 완료! ⬇️ 버튼을 누르면 브라우저가 다운로드 창을 띄웁니다.")
+    st.caption("💡 브라우저에서 ‘다운로드 전에 위치 확인’ 옵션을 켜 두면"
+               " 시스템 저장 대화상자가 열립니다.")
 
-    file_label = st.text_input("💾 저장할 파일명 (.xlsx 제외)", value="mapping_result")
+    file_label = st.text_input("저장할 파일명 (.xlsx 제외)", value="mapping_result")
     save_name  = (file_label or "mapping_result").strip() + ".xlsx"
 
     # 3-14) 다운로드 버튼
