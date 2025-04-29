@@ -4,7 +4,7 @@ import openpyxl, xlsxwriter        # ← requirements.txt 에 이미 명시
 
 # ── (고정) ③번 파일 위치 -------------------------------------------------
 DATA_DIR   = pathlib.Path(__file__).parent / "data"
-FILE3_PATH = DATA_DIR / "file3_default.xlsx"      # ← data/file3_default.xlsx
+FILE3_PATH = DATA_DIR / "all_contents.xlsx"      # ← data/file3_default.xlsx
 
 # ── 후보 컬럼 -----------------------------------------------------------
 FILE1_COL_CAND = ["콘텐츠명", "콘텐츠 제목", "Title", "ContentName", "제목"]
@@ -42,7 +42,7 @@ st.title("📁 콘텐츠 매핑 도구 (웹버전)")
 f1 = st.file_uploader("① S2 채널 전체 (file1)", type="xlsx")
 f2 = st.file_uploader("② 플랫폼 제공 정산서 (file2)", type="xlsx")
 
-st.write("③ S2 콘텐츠 전체 (file3) 는 **data/file3_default.xlsx** 를 자동으로 사용합니다.")
+st.write("③ S2 전체 리스트는 IPS(4월28일기준)리스트르 자동으로 사용합니다.")
 
 save_name = st.text_input("📝 저장 파일명 (.xlsx 생략 가능)", "mapping_result")
 if not save_name.lower().endswith(".xlsx"):
