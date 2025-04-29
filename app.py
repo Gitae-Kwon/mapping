@@ -159,14 +159,34 @@ if st.button("🟢 매핑 실행"):
     )
   
     # 11) 결과 저장 & 다운로드
-    buffer = io.BytesIO()
-    with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
-        result.to_excel(writer, sheet_name="매핑결과", index=False)
+    buf = io.BytesIO()
+    with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
+    # ─ ① 데이터 먼저 씁니다
+    result.to_excel(writer, sheet_name="매핑결과", index=False)
+
+    # ─ ② 워크북 · 워크시트 객체 얻기
+    wb  = writer.book
+    ws  = writer.sheets["매핑결과"]
+
+    # ─ ③ 헤더용 서식 정의
+    fmt_yellow = wb.add_format({"bg_color": "#FFFFCC", "bold": True, "border": 1})
+    fmt_green  = wb.add_format({"bg_color": "#99FFCC", "bold": True, "border": 1})
+
+    # ─ ④ 헤더 셀에 서식 적용
+    yellow_cols = {"매핑콘텐츠명", "콘텐츠ID"}
+    green_cols  = {"동일_매핑콘텐츠명"}
+
+    for col_idx, col_name in enumerate(result.columns):
+        if col_name in yellow_cols:
+            ws.write(0, col_idx, col_name, fmt_yellow)
+        elif col_name in green_cols:
+            ws.write(0, col_idx, col_name, fmt_green)
+        # 나머지는 기본 서식(이미 적혀 있으므로 그대로 둡니다)
 
     st.success("✅ 매핑 완료! 아래 버튼으로 다운로드하세요.")
     st.download_button(
-        "📥 결과 엑셀 다운로드",
-        buffer.getvalue(),
-        file_name="mapping_result.xlsx",                 # ← 필요하면 자유롭게 바꿔도 됩니다
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
+      "📥 결과 엑셀 다운로드",
+      buf.getvalue(),
+      file_name=save_name,            # 사용자가 지정한 파일명
+      mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+)
