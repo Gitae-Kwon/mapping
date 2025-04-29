@@ -1,17 +1,19 @@
 # app.py ───────────────────────────────────────────────────────────────
-import streamlit as st, pandas as pd, re, io, pathlib          # ★ 변경
+import streamlit as st, pandas as pd, re, io, pathlib
 import openpyxl, xlsxwriter
 
 # ── (고정) ③번 파일 경로 ─────────────────────────────────────────────
-DATA_DIR   = pathlib.Path(__file__).parent / "data"            # ★ 변경
-FILE3_PATH = DATA_DIR / "all_contents.xlsx"                    # ★ 변경
+DATA_DIR   = pathlib.Path(__file__).parent / "data"
+FILE3_PATH = DATA_DIR / "all_contents.xlsx"
 
 # ── 후보 컬럼 ─────────────────────────────────────────────────────────
 FILE1_COL_CAND = ["콘텐츠명", "콘텐츠 제목", "Title", "ContentName", "제목"]
-FILE2_COL_CAND = ["컨텐츠","타이틀","작품명","도서명","작품 제목",
-                  "상품명","이용상품명","상품 제목","ProductName","Title","제목"]
+FILE2_COL_CAND = [
+    "컨텐츠", "타이틀", "작품명", "도서명", "작품 제목",
+    "상품명", "이용상품명", "상품 제목", "ProductName", "Title", "제목"
+]
 FILE3_COL_CAND = ["콘텐츠명", "콘텐츠 제목", "Title", "ContentName", "제목"]
-FILE3_ID_CAND  = ["판매채널콘텐츠ID","콘텐츠ID","ID","ContentID"]
+FILE3_ID_CAND  = ["판매채널콘텐츠ID", "콘텐츠ID", "ID", "ContentID"]
 
 # ── 유틸 ──────────────────────────────────────────────────────────────
 def pick(cands, df):
@@ -24,15 +26,15 @@ def clean_title(txt: str) -> str:
     t = str(txt)
     t = re.sub(r"\s*제\s*\d+[권화]", "", t)
     for k, v in {
-        "Un-holyNight": "UnholyNight", "?" : "", "~": "", ",": "", "-": "", "_": ""
+        "Un-holyNight": "UnholyNight", "?": "", "~": "", ",": "", "-": "", "_": ""
     }.items():
         t = t.replace(k, v)
     t = re.sub(r"\([^)]*\)|\[[^\]]*\]", "", t)
     t = re.sub(r"\d+[권화부회]", "", t)
     for kw in [
-        "개정판 l","개정판","외전","무삭제본","무삭제판","합본",
-        "단행본","시즌","세트","연재","특별","최종화","완결",
-        "2부","무삭제","완전판","세개정판","19세개정판"
+        "개정판 l", "개정판", "외전", "무삭제본", "무삭제판", "합본",
+        "단행본", "시즌", "세트", "연재", "특별", "최종화", "완결",
+        "2부", "무삭제", "완전판", "세개정판", "19세개정판"
     ]:
         t = t.replace(kw, "")
     t = re.sub(r"\d+", "", t).rstrip(".")
@@ -49,11 +51,9 @@ f2 = st.file_uploader("② 플랫폼 제공 정산서 (file2)", type="xlsx")
 
 st.caption(
     f"③ S2 콘텐츠 전체 (file3) 은 **{FILE3_PATH.relative_to(pathlib.Path(__file__).parent)}** 를 자동으로 사용합니다."
-)  # ★ 변경
-
-save_name = (
-    st.text_input("💾 저장 파일명(확장자 제외)", value="mapping_result") + ".xlsx"
 )
+
+save_name = st.text_input("💾 저장 파일명(확장자 제외)", value="mapping_result") + ".xlsx"
 
 # ── 실행 --------------------------------------------------------------
 if st.button("🟢 매핑 실행"):
@@ -63,7 +63,7 @@ if st.button("🟢 매핑 실행"):
         st.error("file1, file2 두 개의 엑셀을 먼저 업로드해 주세요.")
         st.stop()
 
-    if not FILE3_PATH.exists():  # ★ 변경
+    if not FILE3_PATH.exists():
         st.error(
             f"⚠️ 3번 파일이 {FILE3_PATH} 에 없습니다. "
             "먼저 data 폴더에 all_contents.xlsx 를 넣어 주세요."
@@ -72,10 +72,8 @@ if st.button("🟢 매핑 실행"):
 
     # 2) Excel → DataFrame -------------------------------------------
     df1 = pd.read_excel(f1)
-    df2 = pd.concat(
-        pd.read_excel(f2, sheet_name=None).values(), ignore_index=True
-    )
-    df3 = pd.read_excel(FILE3_PATH)  # ★ 변경
+    df2 = pd.concat(pd.read_excel(f2, sheet_name=None).values(), ignore_index=True)
+    df3 = pd.read_excel(FILE3_PATH)
 
     # 3) 컬럼 선택 -----------------------------------------------------
     c1  = pick(FILE1_COL_CAND, df1)
@@ -103,8 +101,8 @@ if st.button("🟢 매핑 실행"):
     df2["최종_매핑결과"] = df2["정제_상품명"].map(map3).fillna(df2["매핑결과"])
 
     # 7) 매핑콘텐츠명 / 콘텐츠ID --------------------------------------
-    mask_pair   = df2["정제_상품명"] == df2["매핑결과"]
-    base_pairs  = (
+    mask_pair  = df2["정제_상품명"] == df2["매핑결과"]
+    base_pairs = (
         df2.loc[mask_pair, ["정제_상품명", "최종_매핑결과"]]
            .query("`정제_상품명`.str.strip() != ''", engine="python")
            .drop_duplicates()
@@ -119,7 +117,7 @@ if st.button("🟢 매핑 실행"):
                   .sort_values("매핑콘텐츠명")
                   .reset_index(drop=True)
     )
-    pairs_same   = (
+    pairs_same = (
         base_pairs.loc[dup_mask]
                   .sort_values("매핑콘텐츠명")
                   .reset_index(drop=True)
@@ -164,7 +162,8 @@ if st.button("🟢 매핑 실행"):
     front = ["file1_콘텐츠명", "file1_정제_콘텐츠명", "file1_판매채널콘텐츠ID"]
     cols  = list(result.columns)
     idx   = cols.index("콘텐츠ID") + 1
-    cols.remove("동일_매핑콘텐츠명"); cols.remove("동일_콘텐츠ID")
+    cols.remove("동일_매핑콘텐츠명")
+    cols.remove("동일_콘텐츠ID")
     cols[idx:idx] = ["동일_매핑콘텐츠명", "동일_콘텐츠ID"]
     result = result[front + [c for c in cols if c not in front]]
 
@@ -179,28 +178,41 @@ if st.button("🟢 매핑 실행"):
         errors="ignore"
     )
 
-    # 12) 엑셀 저장 & 헤더 색상 --------------------------------------
+    # 12) 엑셀 저장 + 헤더 서식 + 숨김처리 ─────────────────────────────
     buf = io.BytesIO()
+
+    visible_cols = {            # ❖ 숨기지 않을 8개 열
+        "file1_콘텐츠명", "file1_정제_콘텐츠명", "file1_판매채널콘텐츠ID",
+        "정제_상품명", "매핑결과", "최종_매핑결과",
+        "매핑콘텐츠명", "콘텐츠ID", "동일_매핑콘텐츠명",
+    }
+
     with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
         result.to_excel(writer, sheet_name="매핑결과", index=False)
 
         wb = writer.book
         ws = writer.sheets["매핑결과"]
 
+        # ── 헤더 색상 ────────────────────────────────────────────
         fmt_yellow = wb.add_format({"bg_color": "#FFFFCC", "bold": True, "border": 1})
         fmt_green  = wb.add_format({"bg_color": "#99FFCC", "bold": True, "border": 1})
 
         for col_idx, col_name in enumerate(result.columns):
+            # ① 서식
             if col_name in {"매핑콘텐츠명", "콘텐츠ID"}:
                 ws.write(0, col_idx, col_name, fmt_yellow)
             elif col_name == "동일_매핑콘텐츠명":
                 ws.write(0, col_idx, col_name, fmt_green)
+
+            # ② 숨김
+            if col_name not in visible_cols:
+                ws.set_column(col_idx, col_idx, None, None, {"hidden": True})
 
     # 13) 다운로드 ----------------------------------------------------
     st.success("✅ 매핑 완료! 아래 버튼으로 다운로드하세요.")
     st.download_button(
         "📥 결과 엑셀 다운로드",
         buf.getvalue(),
-        file_name=save_name,   # 사용자가 지정한 파일명
+        file_name=save_name,
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
