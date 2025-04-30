@@ -219,7 +219,7 @@ if st.button("🟢 매핑 실행"):
     visible_cols = {            # ❖ 숨기지 않을 8개 열
         "file1_콘텐츠명", "file1_정제_콘텐츠명", "file1_판매채널콘텐츠ID",
         "정제_상품명", "매핑결과", "최종_매핑결과",
-        "매핑콘텐츠명", "콘텐츠ID", "동일_매핑콘텐츠명",
+        "매핑콘텐츠명", "콘텐츠ID", "미매핑_콘텐츠마스터명",
     }
 
     with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
@@ -236,7 +236,7 @@ if st.button("🟢 매핑 실행"):
             # ① 서식
             if col_name in {"매핑콘텐츠명", "콘텐츠ID"}:
                 ws.write(0, col_idx, col_name, fmt_yellow)
-            elif col_name == "동일_매핑콘텐츠명":
+            elif col_name == "미매핑_콘텐츠마스터명":
                 ws.write(0, col_idx, col_name, fmt_green)
 
             # ② 숨김
