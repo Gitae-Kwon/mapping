@@ -211,7 +211,11 @@ if st.button("🟢 매핑 실행"):
         errors="ignore"
     )
     # ★ 12-a) 컬럼명 변경
-    result.rename(columns={"동일_매핑콘텐츠명": "미매핑_콘텐츠마스터명"}, inplace=True)
+    result.rename(columns={
+        "매핑콘텐츠명":           "매핑_콘텐츠마스터명",
+        "콘텐츠ID":             "매핑_콘텐츠마스터ID",
+        "동일_매핑콘텐츠명":     "미매핑_콘텐츠마스터명",
+    }, inplace=True)
     
     # 12) 엑셀 저장 + 헤더 서식 + 숨김처리 ─────────────────────────────
     buf = io.BytesIO()
@@ -219,7 +223,7 @@ if st.button("🟢 매핑 실행"):
     visible_cols = {            # ❖ 숨기지 않을 8개 열
         "file1_콘텐츠명", "file1_정제_콘텐츠명", "file1_판매채널콘텐츠ID",
         "정제_상품명", "매핑결과", "최종_매핑결과",
-        "매핑콘텐츠명", "콘텐츠ID", "미매핑_콘텐츠마스터명",
+        "매핑_콘텐츠마스터명", "매핑_콘텐츠마스터ID", "미매핑_콘텐츠마스터명",
     }
 
     with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
@@ -234,7 +238,7 @@ if st.button("🟢 매핑 실행"):
 
         for col_idx, col_name in enumerate(result.columns):
             # ① 서식
-            if col_name in {"매핑콘텐츠명", "콘텐츠ID"}:
+            if col_name in {"매핑_콘텐츠마스터명", "매핑_콘텐츠마스터ID"}:
                 ws.write(0, col_idx, col_name, fmt_yellow)
             elif col_name == "미매핑_콘텐츠마스터명":
                 ws.write(0, col_idx, col_name, fmt_green)
