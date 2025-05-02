@@ -218,19 +218,23 @@ if st.button("🟢 매핑 실행"):
         "file1_콘텐츠명":           "S2_콘텐츠명",
         "file1_정제_콘텐츠명":      "S2_정제콘텐츠명",
         "file1_판매채널콘텐츠ID":   "S2_판매채널콘텐츠ID",
-        "매핑결과":   "매핑_판매채널콘텐츠ID",
-        "최종_매핑결과":   "매핑_콘텐츠마스터ID",
-        
+        "매핑결과":               "매핑_판매채널콘텐츠ID",
+        "최종_매핑결과":            "매핑_콘텐츠마스터ID",
     }, inplace=True)
-    
+
     # 12) 엑셀 저장 + 헤더 서식 + 숨김처리 ─────────────────────────────
     buf = io.BytesIO()
 
-    visible_cols = {            # ❖ 숨기지 않을 8개 열
-        "S2_콘텐츠명", "S2_정제콘텐츠명", "S2_판매채널콘텐츠ID",
-        "정제_상품명", "매핑결과", "최종_매핑결과",
-        "매핑_콘텐츠마스터명", "매핑_콘텐츠마스터ID", "미매핑_콘텐츠마스터명",
-        c2,
+    visible_cols = {            # ❖ 숨기지 않을 열
+        "S2_콘텐츠명",
+        "S2_정제콘텐츠명",
+        "S2_판매채널콘텐츠ID",
+        "정제_상품명",
+        "매핑_판매채널콘텐츠ID",
+        "매핑_콘텐츠마스터ID",
+        "매핑_콘텐츠마스터명",
+        "미매핑_콘텐츠마스터명",
+        c2,  # 소문자 c2: 원본 플랫폼 파일의 제목 컬럼
     }
 
     with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
@@ -239,12 +243,12 @@ if st.button("🟢 매핑 실행"):
         wb = writer.book
         ws = writer.sheets["매핑결과"]
 
-        # ── 헤더 색상 ────────────────────────────────────────────
+        # 헤더 색상
         fmt_yellow = wb.add_format({"bg_color": "#FFFFCC", "bold": True, "border": 1})
         fmt_green  = wb.add_format({"bg_color": "#99FFCC", "bold": True, "border": 1})
 
         for col_idx, col_name in enumerate(result.columns):
-            # ① 서식
+            # 서식
             if col_name in {"매핑_콘텐츠마스터명", "매핑_콘텐츠마스터ID"}:
                 ws.write(0, col_idx, col_name, fmt_yellow)
             elif col_name == "미매핑_콘텐츠마스터명":
