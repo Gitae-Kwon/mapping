@@ -246,6 +246,10 @@ if st.button("🟢 매핑 실행"):
 
         wb = writer.book
         ws = writer.sheets["매핑결과"]
+        # ⑥ ★ 헤더 길이에 맞춰 열 너비 자동 조정
+        for col_idx, col_name in enumerate(result.columns):
+            width = len(col_name) + 1
+            ws.set_column(col_idx, col_idx, width)    
 
         # 헤더 색상
         fmt_yellow = wb.add_format({"bg_color": "#FFFFCC", "bold": True, "border": 1})
