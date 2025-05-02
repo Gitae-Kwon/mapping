@@ -230,7 +230,7 @@ if st.button("🟢 매핑 실행"):
         "S2_콘텐츠명", "S2_정제콘텐츠명", "S2_판매채널콘텐츠ID",
         "정제_상품명", "매핑결과", "최종_매핑결과",
         "매핑_콘텐츠마스터명", "매핑_콘텐츠마스터ID", "미매핑_콘텐츠마스터명",
-        C2,
+        c2,
     }
 
     with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
