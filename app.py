@@ -51,8 +51,8 @@ st.title("📁 판매채널 및 콘텐츠마스터ID 매핑")
 # ① S2-판매채널 콘텐츠리스트 업로드
 f1 = st.file_uploader(
     "① S2-판매채널 콘텐츠리스트  "
-    "( https://kiss.kld.kr/mst/sch/schn-ctns-search )에서 판매채널을 선택 조회 후 엑셀 다운로드\n"
-    "※ 다운로드된 파일은 ‘열기’ → ‘다른 이름으로 저장’ 후 업로드해 주세요.",
+    "( https://kiss.kld.kr/mst/sch/schn-ctns-search )에서 판매채널을 선택 조회 후 엑셀 다운로드  \n"
+    "※ S2에서 다운로드된한 파일은 ‘열기’ → ‘다른 이름으로 저장’ 후 업로드해 주세요.(바로 사용시 오류발생)",
     type="xlsx",
 )
 
@@ -66,7 +66,7 @@ f2 = st.file_uploader(
 choice3 = st.selectbox(
     "③ 콘텐츠마스터 매핑 법인을 선택해주세요",
     ("키다리스튜디오", "레진KR", "레진JP"),
-    help="data 폴더에 kidari_contents.xlsx / lezhin_contents.xlsx / lezhinJP_contents.xlsx 파일을 준비해 주세요."
+    help="선택한 법인을 기준으로 IPS 콘텐츠마스터 ID와 매핑 합니다."
 )
 
 # 선택에 따라 사용할 3번 파일 경로 결정
