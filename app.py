@@ -25,12 +25,17 @@ def pick(cands, df):
             return c
     raise ValueError(f"가능한 컬럼이 없습니다 ➜ {cands}")
 
-def clean_title(txt: str) -> str:
+def clean_title(txt) -> str:
+    # 1) 진짜 날짜(datetime/date) 객체면 f"{월}월{일}일" 로
     if isinstance(txt, (datetime, date)):
-        # "7월24일" 처럼 앞에 0 없이, 공백도 없이
         return f"{txt.month}월{txt.day}일"
-        
-    t = str(txt)
+
+    # 2) 이미 "7월24일" 처럼 포맷된 문자열이면 그대로
+    t = str(txt).strip()
+    if re.fullmatch(r"\d{1,2}월\d{1,2}일", t):
+        return t
+
+    # 3) 그 외 기존 정제 로직
     t = re.sub(r"\s*제\s*\d+[권화]", "", t)
     for k, v in {
         "Un-holyNight": "UnholyNight", "?": "", "~": "", ",": "", "-": "", "_": ""
