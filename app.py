@@ -238,7 +238,7 @@ result.rename(columns={
     
     # 12) 엑셀 저장 + 헤더 서식 + 숨김처리 ─────────────────────────────
 buf = io.BytesIO()
-    visible_cols = {            # ❖ 숨기지 않을 열
+visible_cols = {            # ❖ 숨기지 않을 열
         "S2_콘텐츠명",
         "S2_정제콘텐츠명",
         "S2_판매채널콘텐츠ID",
