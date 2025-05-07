@@ -180,18 +180,6 @@ if st.button("🟢 매핑 실행"):
         "최종_매핑결과": "매핑_콘텐츠마스터ID",
     }, inplace=True)
 
-    # ── (수정) 원본 플랫폼 제목 컬럼 복사해서 앞쪽에 삽입 ────────────────
-    orig_col_name = c2
-    new_col_name  = f"원본_{orig_col_name}"
-    # 컬럼 복사
-    result[new_col_name] = result[orig_col_name]
-    # 삽입 위치 계산
-    insert_idx = result.columns.get_loc("매핑_콘텐츠마스터명")
-    # 새로 만든 컬럼을 잘라내고
-    col = result.pop(new_col_name)
-    # 원하는 위치에 삽입
-    result.insert(insert_idx, new_col_name, col)
-
     # 12) 엑셀 저장 + 서식 + 숨김
     buf = io.BytesIO()
     visible = {
