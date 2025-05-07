@@ -235,15 +235,13 @@ if st.button("🟢 매핑 실행"):
         "최종_매핑결과":            "매핑_콘텐츠마스터ID",
     }, inplace=True)
     
-    # ── 정산서_콘텐츠명 열을 매핑 위치로 재배치 ────────────────────────────
-    # (원래 있던 곳에서 잘라내서, 매핑_콘텐츠마스터ID 앞에 삽입)
-    col = result.pop("정산서_콘텐츠명")
-    insert_idx = result.columns.get_loc("매핑_콘텐츠마스터ID")
-    result.insert(insert_idx, "정산서_콘텐츠명", col)
+    # ── 정산서_콘텐츠명 열을 복사해서 매핑 위치에 추가 ─────────────────
+    col = result["정산서_콘텐츠명"]                                           # (1) 원본 복사
+    insert_idx = result.columns.get_loc("매핑_콘텐츠마스터ID")                # (2) 삽입 위치 찾기
+    result.insert(insert_idx, "정산서_콘텐츠명", col)                        # (3) 같은 이름으로 삽입
     
     # 12) 엑셀 저장 + 헤더 서식 + 숨김처리 ─────────────────────────────
     buf = io.BytesIO()
-
     visible_cols = {            # ❖ 숨기지 않을 열
         "S2_콘텐츠명",
         "S2_정제콘텐츠명",
@@ -253,10 +251,8 @@ if st.button("🟢 매핑 실행"):
         "매핑_콘텐츠마스터ID",
         "매핑_콘텐츠마스터명",
         "미매핑_콘텐츠마스터명",
-        "정산서_콘텐츠명"
-    #    c2,  # 소문자 c2: 원본 플랫폼 파일의 제목 컬럼
+        "정산서_콘텐츠명",
     }
-
     with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
         result.to_excel(writer, sheet_name="매핑결과", index=False)
 
