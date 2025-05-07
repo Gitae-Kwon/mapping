@@ -235,6 +235,12 @@ if st.button("🟢 매핑 실행"):
         "최종_매핑결과":            "매핑_콘텐츠마스터ID",
     }, inplace=True)
     
+    # ── 정산서_콘텐츠명 열을 매핑 위치로 재배치 ────────────────────────────
+    # (원래 있던 곳에서 잘라내서, 매핑_콘텐츠마스터ID 앞에 삽입)
+    col = result.pop("정산서_콘텐츠명")
+    insert_idx = result.columns.get_loc("매핑_콘텐츠마스터ID")
+    result.insert(insert_idx, "정산서_콘텐츠명", col)
+    
     # 12) 엑셀 저장 + 헤더 서식 + 숨김처리 ─────────────────────────────
     buf = io.BytesIO()
 
