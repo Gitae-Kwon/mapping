@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import re, io, pathlib
 import openpyxl, xlsxwriter
+from datetime import datetime, date
 
 # ── (고정) ③번 파일 경로 ─────────────────────────────────────────────
 DATA_DIR   = pathlib.Path(__file__).parent / "data"
