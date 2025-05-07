@@ -25,6 +25,10 @@ def pick(cands, df):
     raise ValueError(f"가능한 컬럼이 없습니다 ➜ {cands}")
 
 def clean_title(txt: str) -> str:
+    if isinstance(txt, (datetime, date)):
+        # "7월24일" 처럼 앞에 0 없이, 공백도 없이
+        return f"{txt.month}월{txt.day}일"
+        
     t = str(txt)
     t = re.sub(r"\s*제\s*\d+[권화]", "", t)
     for k, v in {
