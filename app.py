@@ -234,18 +234,7 @@ result.rename(columns={
     "매핑결과":               "매핑_판매채널콘텐츠ID",
     "최종_매핑결과":            "매핑_콘텐츠마스터ID",
 }, inplace=True)
-    
- # ── 정산서_콘텐츠명 열을 복사해서 매핑 위치에 추가 ────────────────────────────
-# 1) 원본 이름 잠시 변경
-result.rename(columns={"정산서_콘텐츠명": "정산서_콘텐츠명_ori"}, inplace=True)
-# 2) 복사본 준비
-col_copy = result["정산서_콘텐츠명_ori"].copy()
-# 3) 삽입 위치 계산
-insert_idx = result.columns.get_loc("매핑_콘텐츠마스터ID")
-# 4) 복사본 삽입 (원하는 이름으로)
-result.insert(insert_idx, "정산서_콘텐츠명", col_copy)
-# 5) 원본도 다시 원래 이름으로 복원
-result.rename(columns={"정산서_콘텐츠명_ori": "정산서_콘텐츠명"}, inplace=True)
+
     
     # 12) 엑셀 저장 + 헤더 서식 + 숨김처리 ─────────────────────────────
     buf = io.BytesIO()
