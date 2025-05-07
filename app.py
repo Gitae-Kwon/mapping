@@ -197,14 +197,14 @@ if st.button("🟢 매핑 실행"):
     # 매핑_판매채널콘텐츠ID 가 숫자가 아닌(문자) 행은 아래로 내리고,
     # 오직 세 열(정제_상품명, 정산서_콘텐츠명, 매핑_판매채널콘텐츠ID)만 건드립니다.
     mask_numeric = pd.to_numeric(
-        result["매핑_판매채널콘텐츠ID"], errors="coerce"
+        result["매핑결과"], errors="coerce"
     ).notna()
     sub = pd.concat([
-        result.loc[mask_numeric,   ["정제_상품명", "정산서_콘텐츠명", "매핑_판매채널콘텐츠ID"]],
-        result.loc[~mask_numeric,  ["정제_상품명", "정산서_콘텐츠명", "매핑_판매채널콘텐츠ID"]],
+        result.loc[mask_numeric,   ["정제_상품명", "정산서_콘텐츠명", "매핑결과"]],
+        result.loc[~mask_numeric,  ["정제_상품명", "정산서_콘텐츠명", "매핑결과"]],
     ], ignore_index=True)
     # 원본 DataFrame 에 다시 덮어쓰기
-    result.loc[:, ["정제_상품명", "정산서_콘텐츠명", "매핑_판매채널콘텐츠ID"]] = sub
+    result.loc[:, ["정제_상품명", "정산서_콘텐츠명", "매핑결과"]] = sub
 
     # 10) 열 순서 재배치 ---------------------------------------------
     front = ["file1_콘텐츠명", "file1_정제_콘텐츠명", "file1_판매채널콘텐츠ID"]
