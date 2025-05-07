@@ -249,13 +249,13 @@ visible_cols = {            # ❖ 숨기지 않을 열
         "미매핑_콘텐츠마스터명",
         "정산서_콘텐츠명",
     }
-    with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
+with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
         result.to_excel(writer, sheet_name="매핑결과", index=False)
 
         wb = writer.book
         ws = writer.sheets["매핑결과"]
         # ⑥ ★ 헤더 길이에 맞춰 열 너비 자동 조정
-        for col_idx, col_name in enumerate(result.columns):
+    for col_idx, col_name in enumerate(result.columns):
             width = len(col_name) + 1
             ws.set_column(col_idx, col_idx, width)    
 
