@@ -180,6 +180,13 @@ if st.button("🟢 매핑 실행"):
         "최종_매핑결과": "매핑_콘텐츠마스터ID",
     }, inplace=True)
 
+        # ── 채널_콘텐츠명 열을 '매핑_콘텐츠마스터ID' 앞에 복사 삽입 ───────────────
+    result.insert(
+        result.columns.get_loc("매핑_콘텐츠마스터ID"),
+        "채널_콘텐츠명",
+        result["정산서_콘텐츠명"]
+    )
+
     # 12) 엑셀 저장 + 서식 + 숨김
     buf = io.BytesIO()
     visible = {
