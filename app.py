@@ -12,7 +12,7 @@ FILE3_PATH = DATA_DIR / "all_contents.xlsx"
 FILE1_COL_CAND = ["콘텐츠명", "콘텐츠 제목", "Title", "ContentName", "제목"]
 FILE2_COL_CAND = [
     "컨텐츠", "타이틀", "작품명", "도서명", "작품 제목",
-    "상품명", "이용상품명", "상품 제목", "ProductName", "Title", "제목", "컨텐츠명", "콘텐츠명"
+    "상품명", "이용상품명", "상품 제목", "ProductName", "Title", "제목", "컨텐츠명", "콘텐츠명", "시리즈명"
 ]
 FILE3_COL_CAND = ["콘텐츠명", "콘텐츠 제목", "Title", "ContentName", "제목"]
 FILE3_ID_CAND = ["판매채널콘텐츠ID", "콘텐츠ID", "ID", "ContentID"]
