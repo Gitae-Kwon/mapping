@@ -34,6 +34,10 @@ def clean_title(txt) -> str:
     if re.fullmatch(r"\d{1,2}월\d{1,2}일", t):
         return t
 
+        # "24/7" 같은 슬래시 포함 숫자 패턴은 그대로
+    if re.fullmatch(r"\d+/\d+", t):
+        return t
+
     # 3) 나머지 정제 로직
     t = re.sub(r"\s*제\s*\d+[권화]", "", t)
     for k, v in {"Un-holyNight": "UnholyNight", "?": "", "~": "", ",": "", "-": "", "_": ""}.items():
@@ -192,13 +196,16 @@ if st.button("🟢 매핑 실행"):
         result.to_excel(writer, sheet_name="매핑결과", index=False)
         wb = writer.book; ws = writer.sheets["매핑결과"]
         # 열 너비 자동 조정
-        for i, name in enumerate(result.columns):
-            ws.set_column(i, i, len(name)+1)
+        for col_idx, col_name in enumerate(result.columns):
+        # result.iloc[0, col_idx] 가 1행(첫 번째 데이터) 셀 값
+        first_val = str(result.iloc[0, col_idx])
+        width = len(first_val) + 1    # +1 은 여유폭
+        ws.set_column(col_idx, col_idx, width)
         # 헤더 색상
         fy = wb.add_format({"bg_color":"#FFFFCC","bold":True,"border":1})
         fg = wb.add_format({"bg_color":"#99FFCC","bold":True,"border":1})
         for i, name in enumerate(result.columns):
-            if name in {"매핑_콘텐츠마스터명","매핑_콘텐츠마스터ID"}: ws.write(0,i,name,fy)
+            if name in {"매핑_콘텐츠마스터명","매핑_콘텐츠마스터ID","채널콘텐츠명"}: ws.write(0,i,name,fy)
             elif name=="미매핑_콘텐츠마스터명": ws.write(0,i,name,fg)
             if name not in visible: ws.set_column(i,i,None,None,{"hidden":True})
 
