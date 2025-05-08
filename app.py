@@ -184,28 +184,40 @@ if st.button("🟢 매핑 실행"):
         "최종_매핑결과": "매핑_콘텐츠마스터ID",
     }, inplace=True)
 
+    # ── 판매채널_콘텐츠명(vlookup) 열 삽입 ─────────────────────────────────
+    lookup = dict(zip(result["정제_상품명"], result["정산서_콘텐츠명"]))
+    # ★ 판매채널_콘텐츠명 열 추가 (매핑명 바로 앞에)
+    pos = result.columns.get_loc("매핑_콘텐츠마스터명")
+
+    # 매핑_콘텐츠마스터명 이 빈 문자열이 아닌 경우에만 정산서_콘텐츠명 복사
+    mask    = result["매핑_콘텐츠마스터명"] != ""
+    channel = result["정산서_콘텐츠명"].where(mask, "")
+
+    result.insert(pos, "판매채널_콘텐츠명", channel)
 
     # 12) 엑셀 저장 + 서식 + 숨김
     buf = io.BytesIO()
     visible = {
         "S2_콘텐츠명","S2_정제콘텐츠명","S2_판매채널콘텐츠ID",
         "정제_상품명","매핑_판매채널콘텐츠ID","매핑_콘텐츠마스터ID",
-        "매핑_콘텐츠마스터명","미매핑_콘텐츠마스터명","정산서_콘텐츠명"
+        "매핑_콘텐츠마스터명","미매핑_콘텐츠마스터명","정산서_콘텐츠명","판매채널_콘텐츠명"
     }
     with pd.ExcelWriter(buf, engine="xlsxwriter") as writer:
         result.to_excel(writer, sheet_name="매핑결과", index=False)
         wb = writer.book; ws = writer.sheets["매핑결과"]
         # 열 너비 자동 조정
         for col_idx, col_name in enumerate(result.columns):
-        # result.iloc[0, col_idx] 가 1행(첫 번째 데이터) 셀 값
-        first_val = str(result.iloc[0, col_idx])
-        width = len(first_val) + 1    # +1 은 여유폭
-        ws.set_column(col_idx, col_idx, width)
+            # 첫 번째 데이터 행의 값
+            first_val = result.iloc[0, col_idx]
+            first_text = "" if pd.isna(first_val) else str(first_val)
+            # 헤더 길이 vs. 데이터 길이 중 큰 쪽 + 여유 1칸
+            width = max(len(col_name), len(first_text)) + 1
+            ws.set_column(col_idx, col_idx, width)
         # 헤더 색상
         fy = wb.add_format({"bg_color":"#FFFFCC","bold":True,"border":1})
         fg = wb.add_format({"bg_color":"#99FFCC","bold":True,"border":1})
         for i, name in enumerate(result.columns):
-            if name in {"매핑_콘텐츠마스터명","매핑_콘텐츠마스터ID","채널콘텐츠명"}: ws.write(0,i,name,fy)
+            if name in {"매핑_콘텐츠마스터명","매핑_콘텐츠마스터ID","판매채널_콘텐츠명"}: ws.write(0,i,name,fy)
             elif name=="미매핑_콘텐츠마스터명": ws.write(0,i,name,fg)
             if name not in visible: ws.set_column(i,i,None,None,{"hidden":True})
 
