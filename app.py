@@ -4,6 +4,7 @@ import pandas as pd
 import re, io, pathlib
 import openpyxl, xlsxwriter
 from datetime import datetime, date
+import unicodedata  # 🔹 공백 및 유니코드 정규화를 위한 모듈
 
 # ── (고정) ③번 파일 경로 ─────────────────────────────────────────────
 DATA_DIR   = pathlib.Path(__file__).parent / "data"
@@ -94,28 +95,35 @@ f2 = st.file_uploader(
     type="xlsx",
 )
 
-# ③ A/B 법인 선택
+# ③ A/B 법인 선택 → 반드시 mapping3 이전!
 choice3 = st.selectbox(
     "③ 콘텐츠마스터 매핑 법인을 선택해주세요",
-    ("키다리스튜디오", "레진KR", "키다리스튜디오_웹툰"),
+    ("키다리스튜디오 소설", "레진KR", "키다리스튜디오 웹툰"),
     help="선택한 법인을 기준으로 IPS 콘텐츠마스터 ID와 매핑합니다."
 )
 
-# 법인 → 파일명 맵
+# ── 법인 → 파일명 맵 ─────────────────────────────────────────────────
 mapping3 = {
-    "키다리스튜디오":      "kidari_contents.xlsx",
-    "레진KR":            "lezhin_contents.xlsx",
-    "키다리스튜디오_웹툰": "kidari_webtoon.xlsx",
+    "키다리스튜디오 소설":    "kidari_contents.xlsx",
+    "레진KR":               "lezhin_contents.xlsx",
+    "키다리스튜디오 웹툰":     "kidari_webtoon.xlsx",
 }
 
-# 선택된 값으로 파일 경로 결정
+# ── 선택된 법인으로 file3_path 정의 ───────────────────────────────────
 try:
     file3_path = DATA_DIR / mapping3[choice3]
 except KeyError:
     st.error(f"지원하지 않는 법인입니다: {choice3}")
     st.stop()
 
-st.write(f"→ `{file3_path.name}` 파일을 사용합니다.")  # 실제로 어떤 파일을 쓰는지 화면에 찍어 봅시다
+# ── 법인별 안내 문구 매핑 ───────────────────────────────────────────────
+display_msgs = {
+    "키다리스튜디오 소설":    "키다리스튜디오 소설 파일을 사용합니다",
+    "레진KR":              "레진KR 파일을 사용합니다",
+    "키다리스튜디오 웹툰":   "키다리스튜디오 웹툰 파일을 사용합니다",
+}
+
+st.write(f"→ {display_msgs.get(choice3, '선택된 파일을 사용합니다')}")
 
 # ④ 저장 파일명 기본값: 업로드한 f2 파일명(stem) + '매핑'
 from pathlib import Path
@@ -155,8 +163,8 @@ if st.button("🟢 매핑 실행"):
 
     # 4) 제목 정제 -----------------------------------------------------
     df1["정제_콘텐츠명"]  = df1[c1].apply(clean_title)
-    df2["정제_상품명"]    = df2[c2].apply(clean_title)
-    df3["정제_콘텐츠3명"] = df3[c3].apply(clean_title)
+    df2["정제_상품명"]    = (df2[c2].apply(clean_title).str.lower())
+    df3["정제_콘텐츠3명"] = (df3[c3].apply(clean_title).str.lower())
 
     # 5) 1차 매핑 -----------------------------------------------------
     map1 = (
